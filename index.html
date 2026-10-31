@@ -14,7 +14,7 @@ button.b{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:9px
 .bd{display:grid;margin:10px auto;gap:2px}.c{background:var(--card);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:28px;aspect-ratio:1}
 #msg{min-height:26px;font-weight:bold;margin:6px}.bar{background:var(--ln);border-radius:8px;height:16px;margin:6px 0;text-align:left}.bar div{height:100%;border-radius:8px}
 #vis{margin:26px 8px 18px;font-size:14px;opacity:.85}
-</style></head><body>
+</style><script data-goatcounter="https://kidsgames.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script></head><body>
 <div id="home"><h1>🎈 Kids Game Zone 🎈</h1><p class="s">Tap an icon to play!</p><div id="grid"></div></div>
 <div id="play"><button class="b" onclick="home()">⬅ Back</button><h2 id="t"></h2><div id="msg"></div><div id="area"></div></div>
 <div id="vis">👀 Visitors: <b id="vc">…</b></div>
@@ -473,11 +473,8 @@ g.fillStyle='#0007';g.fillRect(8,8,180,34);txt(g,'Baskets '+sc+' · Time '+Math.
 function star(el){let s=0,left=15;const a=document.createElement('div');a.style.cssText='position:relative;height:260px;border:2px solid var(--ln);border-radius:14px;overflow:hidden';const st=document.createElement('div');st.textContent='⭐';st.style.cssText='position:absolute;font-size:40px;cursor:pointer';a.append(st);el.append(a);
 function mv(){st.style.left=R(85)+'%';st.style.top=R(75)+'%'}mv();st.onclick=()=>{s++;mv()};
 timer=setInterval(()=>{left--;mv();if(left<=0){clearInterval(timer);st.style.display='none';msg('Time up! Stars: '+s+' 🎉')}else msg('Stars: '+s+'  Time: '+left)},1000);msg('Tap the star fast!')}
-// Visitor counter (global count via counterapi.dev; falls back to a count on this device)
-(function(){const out=n=>{$('vc').textContent=Number(n).toLocaleString()};
-let counted=0;try{counted=sessionStorage.getItem('kgz_counted')}catch(e){}
-const mark=()=>{try{sessionStorage.setItem('kgz_counted','1')}catch(e){}};
-function local(){let n=0;try{n=+localStorage.getItem('kgz_local')||0;if(!counted){n++;localStorage.setItem('kgz_local',n)}}catch(e){}mark();$('vis').firstChild.textContent='👀 Your visits on this device: ';out(n||1)}
-function load(){try{const c=new Counter({workspace:'subhankarsarkar-kidsgames'});(counted?c.get('visits'):c.up('visits')).then(r=>{const n=r&&(r.value??r.count??(r.data&&(r.data.up_count??r.data.count)));if(n==null)throw 0;out(n);mark()}).catch(local)}catch(e){local()}}
-const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/counterapi@2.1.2/dist/counter.browser.min.js';sc.onload=load;sc.onerror=local;document.head.append(sc)})();
+// Visitor counter (GoatCounter: kidsgames.goatcounter.com; falls back to a count on this device)
+(function(){const out=n=>{$('vc').textContent=n};
+function local(){let n=0,c=0;try{c=sessionStorage.getItem('kgz_counted');n=+localStorage.getItem('kgz_local')||0;if(!c){n++;localStorage.setItem('kgz_local',n);sessionStorage.setItem('kgz_counted','1')}}catch(e){}$('vis').firstChild.textContent='👀 Your visits on this device: ';out(n||1)}
+setTimeout(()=>{fetch('https://kidsgames.goatcounter.com/counter/TOTAL.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{if(j&&j.count!=null)out(j.count);else throw 0}).catch(local)},1500)})();
 </script></body></html>
