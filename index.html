@@ -23,7 +23,7 @@ const $=id=>document.getElementById(id),R=n=>Math.floor(Math.random()*n),msg=t=>
 let timer;
 const L=[
 ['Chess','♟️',chess],['Ludo','🎲',ludo],['Snakes & Ladders','🐍',snl],['Tic-Tac-Toe','❌',ttt],['Memory Match','🃏',mem],
-['Whack-a-Mole','🔨',whack],['Rock Paper Scissors','✂️',rps],['Hangman','🔤',hang],['Guess the Number','🔢',guess],['Catch the Star','⭐',star],['Hill Car Race','🏎️',race],['Hill Train Ride','🚂',train],['City Bike Ride','🚲',bike],['Balloon Shooter','🎈',balloon],['Target Shooting','🎯',target],['Bagaduli','🎱',baga],['Carrom','⚫',carrom],['Badminton','🏸',bad],['Table Tennis','🏓',tt],['Football','⚽',foot],['Cricket','🏏',cric],['Hockey','🏑',hock],['Cards (21)','♠️',cards],['American Football','🏈',amfb],['Basketball','🏀',bball]];
+['Whack-a-Mole','🔨',whack],['Rock Paper Scissors','✂️',rps],['Hangman','🔤',hang],['Guess the Number','🔢',guess],['Catch the Star','⭐',star],['Hill Car Race','🏎️',race],['Hill Train Ride','🚂',train],['City Bike Ride','🚲',bike],['Balloon Shooter','🎈',balloon],['Target Shooting','🎯',target],['Bagaduli','🎱',baga],['Carrom','⚫',carrom],['Badminton','🏸',bad],['Table Tennis','🏓',tt],['Football','⚽',foot],['Cricket','🏏',cric],['Hockey','🏑',hock],['Cards (21)','♠️',cards],['American Football','🏈',amfb],['Basketball','🏀',bball],['Simon Says','🧍',simon],['Red Light, Green Light','🚦',redgreen],['Tug of War','🪢',tug],['Sack Race','🎒',sack],['Hide and Seek','🙈',hide],['Treasure Hunt','🗺️',treasure],['Bingo','🎟️',bingo],['Sliding Puzzle','🧩',slide],['Chor-Police','👮',chor],['Tower Blocks','🧱',tower],['Gilli Danda','🪵',gilli],['Tag (Pakdam Pakdai)','🏃',tag]];
 L.forEach(([n,i,f])=>{const b=document.createElement('button');b.className='g';b.innerHTML='<i>'+i+'</i>'+n;b.onclick=()=>{$('home').style.display='none';$('play').style.display='block';$('t').textContent=i+' '+n;msg('');clearInterval(timer);f($('area'))};$('grid').append(b)});
 function home(){clearInterval(timer);$('play').style.display='none';$('home').style.display='block'}
 function board(el,n,cols,fn){el.innerHTML='';const d=document.createElement('div');d.className='bd';d.style.gridTemplateColumns='repeat('+cols+',1fr)';for(let i=0;i<n;i++){const c=document.createElement('div');c.className='c';c.onclick=()=>fn(i,c);d.append(c)}el.append(d);return d.children}
@@ -469,6 +469,74 @@ g.fillStyle='#ffcc99';g.beginPath();g.arc(50,262,9,0,7);g.fill();g.fillStyle='#1
 if(dr&&!b.fly){let x=b.x,y=b.y,vx=(dr.s[0]-dr.c[0])*.11,vy=(dr.s[1]-dr.c[1])*.11;const s=Math.hypot(vx,vy),k=Math.min(1,15/s);vx*=k;vy*=k;g.fillStyle='#e03131';for(let i=0;i<26;i++){vy+=.34;x+=vx;y+=vy;if(i%2)g.fillRect(x-1.5,y-1.5,3,3)}}
 g.font='24px serif';g.textAlign='center';g.fillText('🏀',b.x,b.y+8);
 g.fillStyle='#0007';g.fillRect(8,8,180,34);txt(g,'Baskets '+sc+' · Time '+Math.ceil(left)+'s',98,31,15);if(mt)txt(g,msgT,240,150,30,'#e8590c')})}
+// ===== Playground pack 1 =====
+function simon(el){const A=[['🦘','Jump'],['👏','Clap'],['🌀','Spin'],['🪑','Sit'],['👋','Wave'],['👃','Touch nose']];let sc=0,lv=3,rd=0,cur;
+function nxt(){clearTimeout(timer);if(lv<=0||rd>=12){fin(el,'Game over! Score '+sc+' '+'⭐'.repeat(sc>=9?3:sc>=5?2:1),()=>simon(el));return}rd++;cur={a:A[R(6)],s:Math.random()<.65,d:0};
+el.innerHTML='<h2>'+(cur.s?'Simon says ':'')+cur.a[1]+' '+cur.a[0]+'!</h2>';
+A.forEach(a=>btn(el,a[0]+' '+a[1],()=>{if(cur.d)return;cur.d=1;if(cur.s&&a==cur.a){sc++;msg('✅ Correct! Score '+sc+' '+'❤️'.repeat(lv))}else{lv--;msg(cur.s?'❌ Wrong move!':'❌ Simon didn’t say it!')}timer=setTimeout(nxt,900)}));
+timer=setTimeout(()=>{if(cur.d)return;cur.d=1;if(cur.s){lv--;msg('⏰ Too slow! Simon did say it.')}else{sc++;msg('✅ Well done – Simon didn’t say it, so you stayed still!')}timer=setTimeout(nxt,900)},2600-rd*110)}
+msg('Do the move only when it starts with “Simon says”! ❤️❤️❤️');nxt()}
+function redgreen(el){const[cv,g]=mk(el,480,200,'Hold → (or the Go button) to run on GREEN. Stop on RED or you go back to the start! Reach the flag.');
+let p=0,gr=1,ch=70,go=0,t0=Date.now(),grace=0,fl=0;const gb=btn(el,'Hold to run ▶',()=>{});gb.style.touchAction='none';gb.onpointerdown=()=>go=1;gb.onpointerup=gb.onpointerleave=()=>go=0;msg('Green light – run!');
+lp(()=>{ch--;if(ch<=0){gr=!gr;ch=gr?60+R(90):50+R(60);grace=gr?0:12;msg(gr?'🟢 Green light – run!':'🔴 Red light – stop!')}const run=go||KY.ArrowRight;if(grace>0)grace--;
+if(run){if(gr)p=Math.min(100,p+.45);else if(!grace){p=0;fl=20;msg('🔴 You moved on red! Back to the start')}}if(fl>0)fl--;
+if(p>=100){fin(el,'You made it! 🎉 Time '+((Date.now()-t0)/1000).toFixed(1)+' s',()=>redgreen(el));return}
+g.fillStyle=fl?'#ffa8a8':'#d3f9d8';g.fillRect(0,0,480,200);g.fillStyle='#8d6e63';g.fillRect(0,150,480,50);g.fillStyle=gr?'#2f9e44':'#e03131';g.beginPath();g.arc(440,40,26,0,7);g.fill();
+g.font='40px serif';g.textAlign='center';g.fillText('🧒',440,120);g.fillText('🏁',455,165);g.fillText('🏃',30+p*3.6,160);txt(g,gr?'GO!':'STOP!',240,50,36,gr?'#2f9e44':'#e03131')})}
+function tug(el){const[cv,g]=mk(el,480,160,'Press Space (or → or tap the screen) as fast as you can to pull the rope to your side!');let p=50,w=0,tap=0,pr=0;cv.onpointerdown=()=>tap=1;msg('Pull!');
+lp(()=>{const k=KY[' ']||KY.ArrowRight||tap;if(k&&!pr)p-=2.2;pr=k;tap=0;w++;p+=.12+(Math.sin(w*.05)+1)*.07+(w%90<20?.15:0);
+if(p<=0||p>=100){fin(el,p<=0?'You win! 🎉':'The other team wins. Try again!',()=>tug(el));return}
+g.fillStyle='#d3f9d8';g.fillRect(0,0,480,160);g.fillStyle='#e8590c';g.fillRect(238,20,4,120);g.strokeStyle='#8d6e63';g.lineWidth=6;g.beginPath();g.moveTo(40,100);g.lineTo(440,100);g.stroke();g.fillStyle='#e03131';g.fillRect(40+p*4-6,88,12,24);
+g.font='34px serif';g.textAlign='center';g.fillText('🧒🧒🧒',50,100);g.fillText('🧑🧑🧑',430,100)})}
+function sack(el){const[cv,g]=mk(el,480,220,'Hop by pressing ← and → one after the other (or tap the left and right halves). Beat the 3 friends to the flag!');
+let P=[0,0,0,0],last='',sp=[0,.2,.17,.23],t0=Date.now(),pl=0,pr=0;const hop=s=>{if(s!=last){P[0]+=2.6;last=s}};cv.onpointerdown=e=>hop(pt(cv,e)[0]<240?'L':'R');msg('Go! Alternate ← → quickly');
+lp(()=>{if(KY.ArrowLeft&&!pl)hop('L');if(KY.ArrowRight&&!pr)hop('R');pl=KY.ArrowLeft;pr=KY.ArrowRight;for(let i=1;i<4;i++)P[i]+=sp[i]*(.8+Math.random()*.5);
+const w=P.findIndex(x=>x>=100);if(w>=0){fin(el,w==0?'You won the sack race! 🥇🎉 '+((Date.now()-t0)/1000).toFixed(1)+' s':'A friend won. Try again!',()=>sack(el));return}
+g.fillStyle='#d3f9d8';g.fillRect(0,0,480,220);g.font='30px serif';g.textAlign='center';for(let i=0;i<4;i++){g.fillStyle=i%2?'#b2f2bb':'#8ce99a';g.fillRect(0,i*52+8,480,48);g.fillStyle='#000';g.fillText(i?'🧍':'🎒',24+P[i]*3.9,i*52+44);g.fillText('🏁',462,i*52+44)}})}
+function hide(el){const S=['🌳','🏠','🚗','⛺','🪨','🛏️','🚪','🌲','📦'],F=[];while(F.length<3){const r=R(9);if(!F.includes(r))F.push(r)}let tries=10,found=0;msg('Find 3 hidden friends in 10 tries!');
+const cs=board(el,9,3,(i,c)=>{if(c.dataset.d||tries<=0)return;c.dataset.d=1;tries--;if(F.includes(i)){found++;c.textContent='🧒';c.style.background='#b2f2bb'}else{c.textContent='❌';c.style.opacity=.5}
+msg('Found '+found+'/3 · Tries left '+tries);if(found==3)fin(el,'You found all your friends! 🎉',()=>hide(el));else if(tries<=0){F.forEach(k=>{cs[k].textContent='🧒'});fin(el,'Out of tries! Your friends are shown. Try again!',()=>hide(el))}});
+[...cs].forEach((c,i)=>{c.textContent=S[i];c.style.fontSize='38px'});el.firstChild.style.width='270px'}
+function treasure(el){const N=7,T=R(49);let d=12;msg('Dig for the hidden treasure! Hot = close, cold = far. 12 digs.');
+const cs=board(el,49,7,(i,c)=>{if(c.dataset.d||d<=0)return;c.dataset.d=1;d--;const m=Math.max(Math.abs(i%N-T%N),Math.abs((i/N|0)-(T/N|0)));
+if(i==T){c.textContent='💎';c.style.background='#ffd43b';fin(el,'You found the treasure with '+(12-d)+' digs! 💎🎉',()=>treasure(el));return}
+c.textContent=m<=1?'🔥':m<=2?'♨️':m<=4?'🙂':'❄️';c.style.background=m<=1?'#ffa8a8':m<=2?'#ffd8a8':m<=4?'#fff3bf':'#d0ebff';msg((m<=1?'Burning hot!':m<=2?'Hot':m<=4?'Warm':'Cold')+' – digs left '+d);
+if(d<=0){cs[T].textContent='💎';fin(el,'Out of digs! The treasure was at the 💎.',()=>treasure(el))}});[...cs].forEach(c=>c.style.fontSize='22px');el.firstChild.style.width='330px'}
+function bingo(el){const nums=[...Array(50).keys()].map(x=>x+1).sort(()=>Math.random()-.5),card=nums.slice(0,25),pool=nums.slice(),called=[],mk_=[];msg('Press “Call number”, then tap that number on your card. Get 5 in a row!');
+const L5=[];for(let i=0;i<5;i++)L5.push([0,1,2,3,4].map(j=>i*5+j),[0,1,2,3,4].map(j=>j*5+i));L5.push([0,6,12,18,24],[4,8,12,16,20]);
+const cs=board(el,25,5,(i,c)=>{if(called.includes(card[i])){mk_[i]=1;c.style.background='#ffd43b';if(L5.some(l=>l.every(k=>mk_[k])))fin(el,'BINGO! 🎉 after '+called.length+' calls',()=>bingo(el))}else msg('That number hasn’t been called yet!')});
+[...cs].forEach((c,i)=>{c.textContent=card[i];c.style.fontSize='22px'});el.firstChild.style.width='300px';
+const cb=btn(el,'📣 Call number',()=>{if(!pool.length)return;const n=pool.pop();called.push(n);cb.textContent='📣 Called '+n+' – next';msg('Number '+n+' – find it on your card!')})}
+function slide(el){let t=[1,2,3,4,5,6,7,8,0],b=8,mv=0;const nb=i=>[[1,3],[0,2,4],[1,5],[0,4,6],[1,3,5,7],[2,4,8],[3,7],[4,6,8],[5,7]][i];
+for(let k=0;k<60;k++){const n=nb(b),x=n[R(n.length)];t[b]=t[x];t[x]=0;b=x}
+const cs=board(el,9,3,i=>{if(!nb(b).includes(i))return;t[b]=t[i];t[i]=0;b=i;mv++;draw();if(t.join()=='1,2,3,4,5,6,7,8,0')fin(el,'Solved in '+mv+' moves! 🎉',()=>slide(el))});
+function draw(){[...cs].forEach((c,i)=>{c.textContent=t[i]||'';c.style.fontSize='36px';c.style.background=t[i]?'#a5d8ff':'transparent'});msg('Moves: '+mv+' – put the numbers in order 1–8')}el.firstChild.style.width='270px';draw()}
+function chor(el){const P=['Anu','Ravi','Meena'],tot={You:0,Anu:0,Ravi:0,Meena:0};let rd=0;
+function round(){rd++;const r=['Raja 👑','Mantri 🧑‍💼','Chor 🕵️'].sort(()=>Math.random()-.5),raja=P[r.indexOf('Raja 👑')],sus=P.filter((p,i)=>r[i]!='Raja 👑');
+el.innerHTML='<h3>Round '+rd+' of 5</h3><p>You are the <b>Sipahi 👮</b>. '+raja+' is the <b>Raja 👑</b> and says: “Sipahi, find the Chor!”<br>Who is the Chor?</p>';msg('Pick the Chor!');
+sus.forEach(s=>btn(el,s,()=>{const ok=r[P.indexOf(s)]=='Chor 🕵️',m=sus.find(p=>p!=s);tot[raja]+=1000;if(ok){tot.You+=500;tot[m]+=800}else{tot[s]+=800;tot[m]+=500}
+const sb=Object.entries(tot).map(([k,v])=>k+': '+v).join(' · ');el.innerHTML='<h3>'+(ok?'Correct! 🎉 '+s+' was the Chor':'Wrong! '+m+' was the Chor 😅')+'</h3><p>'+sb+'</p>';msg(sb);
+if(rd<5)btn(el,'Next round ▶',round);else{const w=Math.max(...Object.values(tot));fin(el,(tot.You==w?'You won! 🏆 ':'Game over. ')+sb,()=>chor(el))}}))}round()}
+function tower(el){const[cv,g]=mk(el,300,420,'Tap the screen or press Space to drop the moving block. Stack it as high as you can – only the overlapping part stays!');
+let B=[{x:75,w:150}],cur={x:0,w:150,d:1},sp=2,over=0,pr=0;msg('Height 0');
+const drop=()=>{if(over)return;const t=B[B.length-1],l=Math.max(cur.x,t.x),r=Math.min(cur.x+cur.w,t.x+t.w);if(r-l<=2){over=1;fin(el,'The tower fell! Height '+(B.length-1)+' '+'⭐'.repeat(B.length>12?3:B.length>6?2:1),()=>tower(el));return}B.push({x:l,w:r-l});cur={x:cur.x,w:r-l,d:cur.d};sp=Math.min(6,2+B.length*.12);msg('Height '+(B.length-1))};
+cv.onpointerdown=drop;lp(()=>{if(KY[' ']&&!pr)drop();pr=KY[' '];if(over)return;cur.x+=cur.d*sp;if(cur.x<0||cur.x+cur.w>300){cur.d*=-1;cur.x=Math.max(0,Math.min(300-cur.w,cur.x))}
+g.fillStyle='#e7f5ff';g.fillRect(0,0,300,420);const off=Math.max(0,(B.length-12)*22);B.forEach((b,i)=>{g.fillStyle='hsl('+(i*28)+',70%,55%)';g.fillRect(b.x,398-i*22+off,b.w,21)});g.fillStyle='hsl('+(B.length*28)+',70%,65%)';g.fillRect(cur.x,398-B.length*22+off,cur.w,21);txt(g,'Height '+(B.length-1),150,30,22,'#364fc7')})}
+function gilli(el){const[cv,g]=mk(el,480,200,'Step 1: tap/press Space to flick the gilli up. Step 2: tap again when it is at the very top to smack it far! 3 turns.');
+let ph=0,y=0,vy=0,turn=1,tot=0,d=0,fly=0,pr=0,tap=0;cv.onpointerdown=()=>tap=1;msg('Turn 1 of 3 – flick the gilli!');
+lp(()=>{const k=(KY[' ']&&!pr)||tap;pr=KY[' '];tap=0;
+if(k){if(ph==0){ph=1;vy=7+Math.random()*2;y=0}else if(ph==1){const q=Math.max(0,1-Math.abs(vy)/7);d=Math.round(20+q*q*80+Math.random()*5);ph=2;fly=0;tot+=d;msg('Turn '+turn+': '+(q>.85?'Perfect hit! ':q>.5?'Good hit! ':'Weak hit. ')+d+' feet · Total '+tot+' ft')}}
+if(ph==1){vy-=.25;y+=vy;if(y<=0){ph=2;d=0;fly=0;msg('Turn '+turn+': missed the gilli!')}}
+if(ph==2){fly++;if(fly>70){turn++;if(turn>3){fin(el,'Total distance '+tot+' feet '+'⭐'.repeat(tot>=180?3:tot>=100?2:1),()=>gilli(el));return}ph=0;y=0;msg('Turn '+turn+' of 3 – flick the gilli!')}}
+g.fillStyle='#d3f9d8';g.fillRect(0,0,480,200);g.fillStyle='#8d6e63';g.fillRect(0,165,480,35);g.fillStyle='#a1662f';g.save();g.translate(60,165);g.rotate(ph==1&&y>0?-.5:-.15);g.fillRect(0,-5,70,8);g.restore();
+const u=Math.min(1,fly/70),gx=ph==2?70+u*d*3.6:70,gy=ph==2?160-Math.sin(u*Math.PI)*60:160-y;g.fillStyle='#e8590c';g.beginPath();g.ellipse(gx,gy,10,4,0,0,7);g.fill();txt(g,'Total '+tot+' ft',240,30,20,'#2b8a3e')})}
+function tag(el){const[cv,g]=mk(el,480,300,'Run away from the 2 chasers! Use the mouse or arrow keys. Survive 30 seconds without being tagged.');
+let me={x:240,y:150},mx=240,my=150,C=[{x:40,y:40},{x:440,y:260}],t0=Date.now();cv.onpointermove=e=>{[mx,my]=pt(cv,e)};msg('Run!');
+lp(()=>{if(KY.ArrowLeft)mx-=6;if(KY.ArrowRight)mx+=6;if(KY.ArrowUp)my-=6;if(KY.ArrowDown)my+=6;mx=Math.max(14,Math.min(466,mx));my=Math.max(14,Math.min(286,my));
+me.x+=Math.sign(mx-me.x)*Math.min(4.2,Math.abs(mx-me.x));me.y+=Math.sign(my-me.y)*Math.min(4.2,Math.abs(my-me.y));const tt=(Date.now()-t0)/1000,sp=1.7+tt*.04;
+for(const c of C){const dx=me.x-c.x,dy=me.y-c.y,d=Math.hypot(dx,dy)||1;c.x+=dx/d*sp;c.y+=dy/d*sp;if(d<24){fin(el,'Tagged after '+tt.toFixed(1)+' seconds! Try again.',()=>tag(el));return}}
+if(tt>=30){fin(el,'You survived 30 seconds! 🎉⭐⭐⭐',()=>tag(el));return}msg('Survive! '+Math.ceil(30-tt)+' s left');
+g.fillStyle='#b2f2bb';g.fillRect(0,0,480,300);g.font='30px serif';g.textAlign='center';g.fillText('🏃',me.x,me.y+10);C.forEach(c=>g.fillText('😈',c.x,c.y+10))})}
 // Catch the Star
 function star(el){let s=0,left=15;const a=document.createElement('div');a.style.cssText='position:relative;height:260px;border:2px solid var(--ln);border-radius:14px;overflow:hidden';const st=document.createElement('div');st.textContent='⭐';st.style.cssText='position:absolute;font-size:40px;cursor:pointer';a.append(st);el.append(a);
 function mv(){st.style.left=R(85)+'%';st.style.top=R(75)+'%'}mv();st.onclick=()=>{s++;mv()};
@@ -476,5 +544,5 @@ timer=setInterval(()=>{left--;mv();if(left<=0){clearInterval(timer);st.style.dis
 // Visitor counter (GoatCounter: kidsgames.goatcounter.com; falls back to a count on this device)
 (function(){const out=n=>{$('vc').textContent=n};
 function local(){let n=0,c=0;try{c=sessionStorage.getItem('kgz_counted');n=+localStorage.getItem('kgz_local')||0;if(!c){n++;localStorage.setItem('kgz_local',n);sessionStorage.setItem('kgz_counted','1')}}catch(e){}$('vis').firstChild.textContent='👀 Your visits on this device: ';out(n||1)}
-setTimeout(()=>{fetch('https://kidsgames.goatcounter.com/counter/TOTAL.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{if(j&&j.count!=null)out(j.count);else throw 0}).catch(local)},1500)})();
+setTimeout(()=>{try{fetch('https://kidsgames.goatcounter.com/counter/TOTAL.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{if(j&&j.count!=null)out(j.count);else throw 0}).catch(local)}catch(e){local()}},1500)})();
 </script></body></html>
