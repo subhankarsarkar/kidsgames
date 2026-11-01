@@ -23,7 +23,7 @@ const $=id=>document.getElementById(id),R=n=>Math.floor(Math.random()*n),msg=t=>
 let timer;
 const L=[
 ['Chess','♟️',chess],['Ludo','🎲',ludo],['Snakes & Ladders','🐍',snl],['Tic-Tac-Toe','❌',ttt],['Memory Match','🃏',mem],
-['Whack-a-Mole','🔨',whack],['Rock Paper Scissors','✂️',rps],['Hangman','🔤',hang],['Guess the Number','🔢',guess],['Catch the Star','⭐',star],['Hill Car Race','🏎️',race],['Hill Train Ride','🚂',train],['City Bike Ride','🚲',bike],['Balloon Shooter','🎈',balloon],['Target Shooting','🎯',target],['Bagaduli','🎱',baga],['Carrom','⚫',carrom],['Badminton','🏸',bad],['Table Tennis','🏓',tt],['Football','⚽',foot],['Cricket','🏏',cric],['Hockey','🏑',hock],['Cards (21)','♠️',cards],['American Football','🏈',amfb],['Basketball','🏀',bball],['Simon Says','🧍',simon],['Red Light, Green Light','🚦',redgreen],['Tug of War','🪢',tug],['Sack Race','🎒',sack],['Hide and Seek','🙈',hide],['Treasure Hunt','🗺️',treasure],['Bingo','🎟️',bingo],['Sliding Puzzle','🧩',slide],['Chor-Police','👮',chor],['Tower Blocks','🧱',tower],['Gilli Danda','🪵',gilli],['Tag (Pakdam Pakdai)','🏃',tag]];
+['Whack-a-Mole','🔨',whack],['Rock Paper Scissors','✂️',rps],['Hangman','🔤',hang],['Guess the Number','🔢',guess],['Catch the Star','⭐',star],['Hill Car Race','🏎️',race],['Hill Train Ride','🚂',train],['City Bike Ride','🚲',bike],['Balloon Shooter','🎈',balloon],['Target Shooting','🎯',target],['Bagaduli','🎱',baga],['Carrom','⚫',carrom],['Badminton','🏸',bad],['Table Tennis','🏓',tt],['Football','⚽',foot],['Cricket','🏏',cric],['Hockey','🏑',hock],['Cards (21)','♠️',cards],['American Football','🏈',amfb],['Basketball','🏀',bball],['Simon Says','🧍',simon],['Red Light, Green Light','🚦',redgreen],['Tug of War','🪢',tug],['Sack Race','🎒',sack],['Hide and Seek','🙈',hide],['Treasure Hunt','🗺️',treasure],['Bingo','🎟️',bingo],['Sliding Puzzle','🧩',slide],['Chor-Police','👮',chor],['Tower Blocks','🧱',tower],['Gilli Danda','🪵',gilli],['Tag (Pakdam Pakdai)','🏃',tag],['Jump Rope','🤸',rope],['Dodgeball','🏐',dodge],['Four in a Row','🔴',four],['Sea Battle','🚢',sea],['Block Drop','🟦',tetris],['Maze Muncher','🟡',maze],['Word Tiles','🅰️',words],['Jump & Run','🦸',mario],['Colour Cube','🧊',cube],['Monster Battle','🐲',monsters]];
 L.forEach(([n,i,f])=>{const b=document.createElement('button');b.className='g';b.innerHTML='<i>'+i+'</i>'+n;b.onclick=()=>{$('home').style.display='none';$('play').style.display='block';$('t').textContent=i+' '+n;msg('');clearInterval(timer);f($('area'))};$('grid').append(b)});
 function home(){clearInterval(timer);$('play').style.display='none';$('home').style.display='block'}
 function board(el,n,cols,fn){el.innerHTML='';const d=document.createElement('div');d.className='bd';d.style.gridTemplateColumns='repeat('+cols+',1fr)';for(let i=0;i<n;i++){const c=document.createElement('div');c.className='c';c.onclick=()=>fn(i,c);d.append(c)}el.append(d);return d.children}
@@ -537,6 +537,93 @@ me.x+=Math.sign(mx-me.x)*Math.min(4.2,Math.abs(mx-me.x));me.y+=Math.sign(my-me.y
 for(const c of C){const dx=me.x-c.x,dy=me.y-c.y,d=Math.hypot(dx,dy)||1;c.x+=dx/d*sp;c.y+=dy/d*sp;if(d<24){fin(el,'Tagged after '+tt.toFixed(1)+' seconds! Try again.',()=>tag(el));return}}
 if(tt>=30){fin(el,'You survived 30 seconds! 🎉⭐⭐⭐',()=>tag(el));return}msg('Survive! '+Math.ceil(30-tt)+' s left');
 g.fillStyle='#b2f2bb';g.fillRect(0,0,480,300);g.font='30px serif';g.textAlign='center';g.fillText('🏃',me.x,me.y+10);C.forEach(c=>g.fillText('😈',c.x,c.y+10))})}
+// ===== Playground pack 2 =====
+function rope(el){const[cv,g]=mk(el,400,240,'Press Space (or tap) to jump just as the rope reaches the ground. How many jumps can you do?');
+let a=Math.PI,z=0,vz=0,n=0,sp=.07,pr=0,tap=0,pc=-1;cv.onpointerdown=()=>tap=1;msg('Jumps: 0');
+lp(()=>{const k=KY[' ']||KY.ArrowUp||tap;if(k&&!pr&&z==0)vz=7.5;pr=k;tap=0;if(vz!=0||z>0){z+=vz;vz-=.55;if(z<=0){z=0;vz=0}}
+a+=sp;const c=Math.cos(a);if(c>.96&&pc<=.96){if(z<20){fin(el,'Tripped after '+n+' jumps! '+'⭐'.repeat(n>=30?3:n>=12?2:1),()=>rope(el));return}n++;sp=Math.min(.16,.07+n*.003);msg('Jumps: '+n)}pc=c;
+g.fillStyle='#d0ebff';g.fillRect(0,0,400,240);g.fillStyle='#8ce99a';g.fillRect(0,205,400,35);const ry=130+70*c;g.strokeStyle='#e8590c';g.lineWidth=4;g.beginPath();g.moveTo(60,150);g.quadraticCurveTo(200,2*ry-150,340,150);g.stroke();
+g.font='38px serif';g.textAlign='center';g.fillText('🧒',50,205);g.fillText('🧒',350,205);g.fillText('🤸',200,205-z);txt(g,'Jumps '+n,200,30,24,'#364fc7')})}
+function dodge(el){const[cv,g]=mk(el,480,300,'← → ↑ ↓ move and dodge. Space (or tap) throws your ball up – hit an opponent to knock them out! 3 lives, 45 seconds.');
+let me={x:240,y:250},E=[{x:100,y:40,d:1,r:0},{x:240,y:40,d:-1,r:0},{x:380,y:40,d:1,r:0}],Bs=[],Ms=[],lv=3,sc=0,t0=Date.now(),pr=0,tap=0,inv=0;cv.onpointerdown=e=>{me.x=pt(cv,e)[0];tap=1};msg('Dodge! ❤️❤️❤️');
+lp(()=>{if(KY.ArrowLeft)me.x-=3.6;if(KY.ArrowRight)me.x+=3.6;if(KY.ArrowUp)me.y-=3.6;if(KY.ArrowDown)me.y+=3.6;me.x=Math.max(16,Math.min(464,me.x));me.y=Math.max(160,Math.min(284,me.y));
+const k=KY[' ']||tap;if(k&&!pr)Ms.push({x:me.x,y:me.y-14});pr=k;tap=0;const tt=(Date.now()-t0)/1000;
+E.forEach(e=>{if(e.r>0){e.r--;return}e.x+=e.d*1.4;if(e.x<20||e.x>460)e.d*=-1;if(Math.random()<.012+tt*.0004){const dx=me.x-e.x,dy=me.y-e.y,d=Math.hypot(dx,dy)||1,s=3+tt*.04;Bs.push({x:e.x,y:e.y+14,vx:dx/d*s,vy:dy/d*s})}});
+Bs.forEach(b=>{b.x+=b.vx;b.y+=b.vy;if(inv<=0&&Math.hypot(b.x-me.x,b.y-me.y)<18){b.dead=1;lv--;inv=40;msg('Ouch! '+'❤️'.repeat(Math.max(0,lv)))}});Bs=Bs.filter(b=>!b.dead&&b.y<310&&b.y>-10&&b.x>-10&&b.x<490);
+Ms.forEach(m=>{m.y-=6;E.forEach(e=>{if(!e.r&&!m.dead&&Math.hypot(m.x-e.x,m.y-e.y)<20){e.r=90;m.dead=1;sc+=10;msg('Hit! Score '+sc)}})});Ms=Ms.filter(m=>!m.dead&&m.y>-10);inv--;
+if(lv<=0||tt>=45){fin(el,(lv>0?'You survived! ':'Out! ')+'Score '+sc+' '+'⭐'.repeat(sc>=100?3:sc>=50?2:1),()=>dodge(el));return}
+g.fillStyle='#ffe8cc';g.fillRect(0,0,480,300);g.strokeStyle='#e8590c';g.lineWidth=3;g.beginPath();g.moveTo(0,150);g.lineTo(480,150);g.stroke();g.textAlign='center';g.font='30px serif';
+E.forEach(e=>{g.globalAlpha=e.r?.3:1;g.fillText('😠',e.x,e.y+10)});g.globalAlpha=inv>0&&inv%6<3?.3:1;g.fillText('🧒',me.x,me.y+10);g.globalAlpha=1;g.font='20px serif';Bs.forEach(b=>g.fillText('🏐',b.x,b.y+7));Ms.forEach(m=>g.fillText('🟠',m.x,m.y));txt(g,'Score '+sc+' · '+'❤️'.repeat(Math.max(0,lv))+' · '+Math.ceil(45-tt)+'s',240,290,16,'#222')})}
+function four(el){let b=Array(42).fill(0),turn=1,done=0;msg('Drop discs – get 4 in a row! You are 🔴 (tap a column)');
+const win=(b,p)=>{for(let r=0;r<6;r++)for(let c=0;c<7;c++)for(const[dr,dc]of[[0,1],[1,0],[1,1],[1,-1]]){let k=0;for(;k<4;k++){const rr=r+dr*k,cc=c+dc*k;if(rr<0||rr>5||cc<0||cc>6||b[rr*7+cc]!=p)break}if(k==4)return 1}return 0};
+const drop=(b,c,p)=>{for(let r=5;r>=0;r--)if(!b[r*7+c]){b[r*7+c]=p;return r}return -1};
+const cs=board(el,42,7,i=>{if(!done&&turn==1)go(i%7)});[...cs].forEach(c=>{c.style.background='#339af0';c.style.fontSize='26px'});el.firstChild.style.width='340px';
+const draw=()=>[...cs].forEach((c,i)=>{c.textContent=b[i]==1?'🔴':b[i]==2?'🟡':''});
+function end(){if(win(b,1)){done=1;fin(el,'You win! 🎉',()=>four(el))}else if(win(b,2)){done=1;fin(el,'The computer wins. Try again!',()=>four(el))}else if(b.every(x=>x)){done=1;fin(el,'A draw!',()=>four(el))}return done}
+function go(c){if(drop(b,c,1)<0)return;draw();if(end())return;turn=2;timer=setTimeout(ai,400)}
+function ai(){let pick=null;for(const p of[2,1]){for(let c=0;c<7;c++)if(!b[c]){const t=b.slice();drop(t,c,p);if(win(t,p)){pick=c;break}}if(pick!=null)break}
+if(pick==null){const o=[3,2,4,1,5,0,6].filter(c=>!b[c]);pick=o[R(Math.min(3,o.length))]}drop(b,pick,2);draw();if(!end())turn=1}}
+function sea(el){const SZ=[3,2,2];function place(){const g=Array(36).fill(0);SZ.forEach((s,i)=>{for(;;){const h=Math.random()<.5,r=R(h?6:7-s),c=R(h?7-s:6),cells=[...Array(s)].map((_,k)=>h?r*6+c+k:(r+k)*6+c);if(cells.every(x=>!g[x])){cells.forEach(x=>g[x]=i+1);break}}});return g}
+const E=place(),Pl=place();let ef=[],pf=[],hits=0,mine=0;msg('Fire at the enemy sea! Sink all 3 ships (7 squares). 💥 = hit, 💧 = miss');
+el.innerHTML='<p>Enemy sea – tap to fire</p><div id="s1"></div><p>Your fleet</p><div id="s2"></div>';
+const mkg=(id,fn)=>{const d=document.createElement('div');d.className='bd';d.style.cssText='grid-template-columns:repeat(6,1fr);width:240px';for(let i=0;i<36;i++){const c=document.createElement('div');c.className='c';c.style.fontSize='20px';c.onclick=()=>fn(i);d.append(c)}$(id).append(d);return d.children};
+const A=mkg('s1',fire),Bc=mkg('s2',()=>{});
+function paint(){[...A].forEach((c,i)=>{c.textContent=ef[i]?(E[i]?'💥':'💧'):'';c.style.background=ef[i]?(E[i]?'#ffa8a8':'#d0ebff'):'#a5d8ff'});[...Bc].forEach((c,i)=>{c.textContent=pf[i]?(Pl[i]?'💥':'💧'):(Pl[i]?'🚢':'');c.style.background=pf[i]?(Pl[i]?'#ffa8a8':'#d0ebff'):'#a5d8ff'})}
+function fire(i){if(ef[i]||hits>=7||mine>=7)return;ef[i]=1;if(E[i])hits++;if(hits>=7){paint();fin(el,'You sank the whole enemy fleet! 🎉',()=>sea(el));return}
+let t;do{t=R(36)}while(pf[t]);pf[t]=1;if(Pl[t])mine++;paint();if(mine>=7){fin(el,'The computer sank your fleet. Try again!',()=>sea(el));return}msg('Your hits '+hits+'/7 · Enemy hits '+mine+'/7')}paint()}
+function tetris(el){const[cv,g]=mk(el,200,400,'← → move · ↑ rotate · ↓ faster · Space drops. On a phone: tap top = rotate, sides = move, bottom = drop.');
+const SH=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[0,1,1],[1,1,0]],[[1,1,0],[0,1,1]]],CL=['#22b8cf','#fcc419','#be4bdb','#4c6ef5','#ff922b','#51cf66','#ff6b6b'];
+let G=Array.from({length:20},()=>Array(10).fill(0)),p,sc=0,ln=0,tk=0,over=0,kp={};
+const rot=m=>m[0].map((_,i)=>m.map(r=>r[i]).reverse()),fit=(m,x,y)=>m.every((r,j)=>r.every((v,i)=>!v||(x+i>=0&&x+i<10&&y+j<20&&!(y+j>=0&&G[y+j][x+i]))));
+const nw=()=>{const k=R(7);p={m:SH[k],c:k+1,x:3,y:0};if(!fit(p.m,p.x,p.y)){over=1;fin(el,'Game over! Score '+sc+' · Lines '+ln+' '+'⭐'.repeat(ln>=10?3:ln>=4?2:1),()=>tetris(el))}};nw();
+const lock=()=>{p.m.forEach((r,j)=>r.forEach((v,i)=>{if(v)G[p.y+j][p.x+i]=p.c}));let c=0;G=G.filter(r=>{if(r.every(v=>v)){c++;return false}return true});while(G.length<20)G.unshift(Array(10).fill(0));ln+=c;sc+=[0,100,300,500,800][c];msg('Score '+sc+' · Lines '+ln);nw()};
+const mv=(dx,dy)=>{if(fit(p.m,p.x+dx,p.y+dy)){p.x+=dx;p.y+=dy;return 1}if(dy)lock();return 0},rt=()=>{const r=rot(p.m);if(fit(r,p.x,p.y))p.m=r},dp=()=>{while(fit(p.m,p.x,p.y+1))p.y++;lock()};
+const key=(k,d)=>{if(k&&!kp[d]){kp[d]=1;return 1}if(!k)kp[d]=0;return 0};
+cv.onpointerdown=e=>{if(over)return;const[x,y]=pt(cv,e);if(y<130)rt();else if(y>300)dp();else mv(x<100?-1:1,0)};msg('Score 0');
+lp(()=>{if(over)return;if(key(KY.ArrowLeft,'l'))mv(-1,0);if(key(KY.ArrowRight,'r'))mv(1,0);if(key(KY.ArrowUp,'u'))rt();if(key(KY[' '],'s'))dp();tk++;if(tk>=(KY.ArrowDown?2:Math.max(6,28-ln*1.5))){tk=0;mv(0,1)}
+g.fillStyle='#212529';g.fillRect(0,0,200,400);G.forEach((r,j)=>r.forEach((v,i)=>{if(v){g.fillStyle=CL[v-1];g.fillRect(i*20,j*20,19,19)}}));if(!over){g.fillStyle=CL[p.c-1];p.m.forEach((r,j)=>r.forEach((v,i)=>{if(v)g.fillRect((p.x+i)*20,(p.y+j)*20,19,19)}))}})}
+function maze(el){const[cv,g]=mk(el,450,330,'Arrow keys to move (or tap the side you want to go). Eat all the dots and avoid the ghosts! 3 lives.');
+const M=['###############','#.............#','#.###.###.###.#','#.............#','#.##.#####.##.#','#.............#','#.##.#####.##.#','#.............#','#.###.###.###.#','#.............#','###############'],D=M.map(r=>[...r].map(c=>c=='.'?1:0));
+let P={x:1,y:1},dir=[0,0],nd=[0,0],Gh=[{x:13,y:9,d:[0,0]},{x:13,y:1,d:[0,0]}],lv=3,f=0,left=D.flat().filter(x=>x).length,sc=0;const ok=(x,y)=>M[y]&&M[y][x]!='#';
+cv.onpointerdown=e=>{const[x,y]=pt(cv,e),dx=x-(P.x*30+15),dy=y-(P.y*30+15);nd=Math.abs(dx)>Math.abs(dy)?[Math.sign(dx),0]:[0,Math.sign(dy)]};msg('❤️❤️❤️');
+const reset=()=>{P={x:1,y:1};dir=[0,0];nd=[0,0];Gh=[{x:13,y:9,d:[0,0]},{x:13,y:1,d:[0,0]}]};
+lp(()=>{f++;if(KY.ArrowLeft)nd=[-1,0];if(KY.ArrowRight)nd=[1,0];if(KY.ArrowUp)nd=[0,-1];if(KY.ArrowDown)nd=[0,1];
+if(f%7==0){if(ok(P.x+nd[0],P.y+nd[1]))dir=nd;if(ok(P.x+dir[0],P.y+dir[1])){P.x+=dir[0];P.y+=dir[1]}if(D[P.y][P.x]){D[P.y][P.x]=0;left--;sc+=10}
+if(f%14==0)Gh.forEach(h=>{const o=[[1,0],[-1,0],[0,1],[0,-1]].filter(d=>ok(h.x+d[0],h.y+d[1])&&!(d[0]==-h.d[0]&&d[1]==-h.d[1]));const c=o.length?o:[[-h.d[0],-h.d[1]]];let d=c[R(c.length)];if(Math.random()<.5)d=c.reduce((a,b)=>Math.hypot(h.x+b[0]-P.x,h.y+b[1]-P.y)<Math.hypot(h.x+a[0]-P.x,h.y+a[1]-P.y)?b:a);h.d=d;h.x+=d[0];h.y+=d[1]});
+if(Gh.some(h=>h.x==P.x&&h.y==P.y)){lv--;msg('Caught! '+'❤️'.repeat(Math.max(0,lv)));reset();if(lv<=0){fin(el,'Game over! Score '+sc,()=>maze(el));return}}
+if(left<=0){fin(el,'You ate every dot! 🎉 Score '+sc+' '+'⭐'.repeat(lv),()=>maze(el));return}}
+g.fillStyle='#111';g.fillRect(0,0,450,330);M.forEach((r,y)=>[...r].forEach((c,x)=>{if(c=='#'){g.fillStyle='#364fc7';g.fillRect(x*30+2,y*30+2,26,26)}else if(D[y][x]){g.fillStyle='#ffe066';g.beginPath();g.arc(x*30+15,y*30+15,3,0,7);g.fill()}}));
+g.font='24px serif';g.textAlign='center';g.fillText('😋',P.x*30+15,P.y*30+24);Gh.forEach(h=>g.fillText('👻',h.x*30+15,h.y*30+24))})}
+function words(el){const W='RAINBOW KITCHEN TEACHER CHICKEN BLANKET DOLPHIN BALLOON PANCAKE HOLIDAY PLAYING ELEPHANT BANANA GARDEN PLANET ORANGE FLOWER SCHOOL FRIEND MONKEY SUNSHINE BASKET CASTLE DRAGON FOREST JUNGLE PENCIL ROCKET SPIDER TIGER'.split(' '),V={A:1,E:1,I:1,O:1,U:1,L:1,N:1,R:1,S:1,T:1,D:2,G:2,B:3,C:3,M:3,P:3,F:4,H:4,V:4,W:4,Y:4,K:5,J:8,X:8,Q:10,Z:10},ws=W.sort(()=>Math.random()-.5).slice(0,6);let rd=0,sc=0,mis=0;
+function round(){const w=ws[rd],sh=[...w].sort(()=>Math.random()-.5);let ans='',used=[];msg('Round '+(rd+1)+' of 6 · Score '+sc);el.innerHTML='<h3>Unscramble the word</h3><div id="an" style="font-size:30px;min-height:46px;letter-spacing:4px">&nbsp;</div><div id="tl"></div><div id="ac"></div>';
+const draw=()=>{$('an').textContent=ans||'…';$('tl').innerHTML='';sh.forEach((l,i)=>{const b=btn($('tl'),l+(V[l]||1),()=>{used[i]=1;ans+=l;draw()});b.disabled=!!used[i];b.style.fontSize='22px'});
+if(ans.length==w.length){const ok=ans==w;if(ok){const pts=[...w].reduce((s,c)=>s+(V[c]||1),0);sc+=pts;msg('✅ Correct! +'+pts+' points')}else msg('❌ It was '+w);$('tl').innerHTML='';rd++;if(rd<6)btn($('ac'),'Next word ▶',round);else fin(el,'Final score '+sc+' '+'⭐'.repeat(sc>=70?3:sc>=40?2:1),()=>words(el))}else btn($('ac'),'Clear',()=>{ans='';used=[];draw()})};draw()}round()}
+function mario(el){const[cv,g]=mk(el,480,240,'Space / ↑ (or tap) to jump over blocks and pits. Collect the coins! The longer you run, the faster it gets.');
+let d=0,z=0,vz=0,sp=4,O=[],C=[],nx=500,coins=0,pr=0,tap=0,over=0;cv.onpointerdown=()=>tap=1;msg('Run!');
+lp(()=>{if(over)return;const k=KY[' ']||KY.ArrowUp||tap;if(k&&!pr&&z==0)vz=9.5;pr=k;tap=0;if(vz!=0||z>0){z+=vz;vz-=.55;if(z<=0){z=0;vz=0}}d+=sp;sp=Math.min(8,4+d/1500);
+while(nx<d+600){const t=Math.random()<.5?'b':'p';O.push({x:nx,t,w:t=='b'?28:70});if(Math.random()<.7)C.push({x:nx+(t=='p'?35:14),y:60+R(60)});nx+=260+R(200)}
+O=O.filter(o=>o.x>d-100);C=C.filter(c=>c.x>d-100);
+C.forEach(c=>{if(!c.g&&Math.abs(c.x-d-80)<18&&Math.abs(190-z-c.y-14)<30){c.g=1;coins++}});
+for(const o of O){const px=80+d;if(o.t=='b'&&px>o.x-14&&px<o.x+o.w+8&&z<28)over=1;if(o.t=='p'&&px>o.x+10&&px<o.x+o.w-10&&z<=0)over=1}
+if(over){const s=Math.floor(d/10)+coins*10;fin(el,'Game over! Distance '+Math.floor(d/10)+' m · Coins '+coins+' · Score '+s+' '+'⭐'.repeat(s>=300?3:s>=120?2:1),()=>mario(el));return}
+const cam=d;g.fillStyle='#74c0fc';g.fillRect(0,0,480,240);g.fillStyle='#8ce99a';g.fillRect(0,190,480,50);
+O.forEach(o=>{const x=o.x-cam;if(o.t=='b'){g.fillStyle='#e8590c';g.fillRect(x,162,28,28);g.fillStyle='#ffa94d';g.fillRect(x+3,165,22,6)}else{g.fillStyle='#74c0fc';g.fillRect(x,190,o.w,50)}});
+C.forEach(c=>{if(!c.g){g.font='22px serif';g.textAlign='center';g.fillText('🪙',c.x-cam,c.y+14)}});g.font='34px serif';g.textAlign='center';g.fillText('🦸',80,192-z);txt(g,Math.floor(d/10)+' m · 🪙 '+coins,240,28,20,'#1c1b29')})}
+function cube(el){let b=[0,0,0,1,1,1,2,2,2],mv=0;const C=['#fa5252','#51cf66','#339af0'],rr=r=>{const i=r*3;b.splice(i,3,b[i+2],b[i],b[i+1])},rc=c=>{const t=[b[c],b[c+3],b[c+6]];b[c]=t[2];b[c+3]=t[0];b[c+6]=t[1]},sv=()=>[0,1,2].every(r=>b[r*3]==b[r*3+1]&&b[r*3]==b[r*3+2]);
+do{for(let i=0;i<30;i++)R(2)?rr(R(3)):rc(R(3))}while(sv());
+const cs=board(el,9,3,()=>{});[...cs].forEach(c=>{c.style.height='70px';c.style.cursor='default'});el.firstChild.style.width='210px';
+const draw=()=>{[...cs].forEach((c,i)=>c.style.background=C[b[i]]);msg('Moves: '+mv+' – make every row one colour')};
+const go=f=>{f();mv++;draw();if(sv())fin(el,'Solved in '+mv+' moves! 🎉',()=>cube(el))};
+[0,1,2].forEach(r=>btn(el,'Row '+(r+1)+' ➡',()=>go(()=>rr(r))));el.append(document.createElement('br'));[0,1,2].forEach(c=>btn(el,'Column '+(c+1)+' ⬇',()=>go(()=>rc(c))));draw()}
+function monsters(el){const M=[['🔥','Flamy','fire'],['💧','Splashy','water'],['🌿','Leafy','grass']],adv={fire:'grass',water:'fire',grass:'water'};
+el.innerHTML='<p>Choose your monster. 🔥 beats 🌿, 🌿 beats 💧, 💧 beats 🔥.</p>';msg('Pick your monster!');M.forEach(m=>btn(el,m[0]+' '+m[1],()=>start(m)));
+function start(me){const en=M[R(3)];let h1=100,h2=100,heals=2,busy=0;
+const bar=(h,c)=>'<div class="bar"><div style="width:'+Math.max(0,h)+'%;background:'+c+'"></div></div>';
+function draw(){el.innerHTML='<div style="font-size:60px">'+en[0]+'</div><b>Enemy '+en[1]+' ('+Math.max(0,h2)+')</b>'+bar(h2,'#fa5252')+'<br><div style="font-size:60px">'+me[0]+'</div><b>You: '+me[1]+' ('+Math.max(0,h1)+')</b>'+bar(h1,'#51cf66')+'<div id="ac"></div>';
+if(h1>0&&h2>0){const A=$('ac');btn(A,'⚔️ Tackle',()=>act(15+R(8)));btn(A,'✨ Special',()=>act(Math.round((22+R(9))*(adv[me[2]]==en[2]?1.6:adv[en[2]]==me[2]?.6:1))));if(heals)btn(A,'💚 Heal ('+heals+')',()=>{h1=Math.min(100,h1+25);heals--;msg('You healed!');reply()})}}
+function act(d){if(busy)return;h2-=d;msg('You hit for '+d+'!');if(h2<=0){draw();fin(el,'You won the battle! 🎉',()=>monsters(el));return}reply()}
+function reply(){busy=1;draw();timer=setTimeout(()=>{const d=Math.round((Math.random()<.4?22+R(9):15+R(8))*(Math.random()<.3?(adv[en[2]]==me[2]?1.5:1):1));h1-=d;msg('Enemy hit you for '+d+'!');busy=0;if(h1<=0){draw();fin(el,'Your monster fainted. Try again!',()=>monsters(el));return}draw()},700)}
+draw();msg('Battle start!')}}
 // Catch the Star
 function star(el){let s=0,left=15;const a=document.createElement('div');a.style.cssText='position:relative;height:260px;border:2px solid var(--ln);border-radius:14px;overflow:hidden';const st=document.createElement('div');st.textContent='⭐';st.style.cssText='position:absolute;font-size:40px;cursor:pointer';a.append(st);el.append(a);
 function mv(){st.style.left=R(85)+'%';st.style.top=R(75)+'%'}mv();st.onclick=()=>{s++;mv()};
